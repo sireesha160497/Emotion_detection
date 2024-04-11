@@ -39,7 +39,7 @@ def save_to_csv():
     with open('emotions.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         for emotion in emotions:
-            writer.writerow(emotion[:3])  # Write only the first three values of each tuple
+            writer.writerow(emotion[:2])  # Write only the first three values of each tuple
     result_label.config(text="Saved inputs to emotions.csv")
     train_model()
     # Reload the GUI after training
