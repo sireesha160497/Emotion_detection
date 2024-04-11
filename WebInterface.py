@@ -6,6 +6,7 @@ app = Flask(__name__)
 model = EmotionDetectionModel('emotions.csv')
 model.train_model()
 
+
 @app.route('/predict', methods=['POST'])
 def predict_emotion():
     if request.method == 'POST':
@@ -18,6 +19,7 @@ def predict_emotion():
             return jsonify({'error': 'Invalid request. Please provide text parameter.'}), 400
     else:
         return jsonify({'error': 'Invalid request method. Only POST requests are supported.'}), 405
+
 
 if __name__ == '__main__':
     app.run(debug=False)

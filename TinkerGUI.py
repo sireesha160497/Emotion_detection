@@ -1,5 +1,8 @@
 import tkinter as tk
+import warnings
+
 import requests
+from sklearn.exceptions import UndefinedMetricWarning
 from sklearn.metrics import classification_report
 import time
 import csv
@@ -32,14 +35,17 @@ def update_results():
 def calculate_performance():
     y_true = [true_emotion for _, true_emotion, _, _ in emotions]
     y_pred = [predicted_emotion for _, _, predicted_emotion, _ in emotions]
-    report = classification_report(y_true, y_pred)
+    warnings.filterwarnings("ignore", category=UndefinedMetricWarning)
+    report = classification_report(y_true, y_pred, zero_division='warn')
     result_label.config(text="Performance Metrics:\n" + report)
+    # Reset warning filter
+    warnings.filterwarnings("default", category=UndefinedMetricWarning)
 
 def save_to_csv():
     with open('emotions.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         for emotion in emotions:
-            writer.writerow(emotion[:3])  # Write only the first three values of each tuple
+            writer.writerow(emotion[:2])  # Write only the first three values of each tuple
     result_label.config(text="Saved inputs to emotions.csv")
     train_model()
     # Reload the GUI after training
