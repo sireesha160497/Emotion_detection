@@ -26,7 +26,7 @@ def predict_emotion():
 
 
 def upload_csv():
-   # global model  # Ensure that the 'model' variable is accessed from the global scope
+    global model
 
     # Open a file dialog to select the CSV file
     csv_file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
@@ -56,11 +56,19 @@ def upload_csv():
                 true_emotions = [true_emotion for _, true_emotion, _ in data_with_predictions]
                 predicted_emotions = [predicted_emotion for _, _, predicted_emotion in data_with_predictions]
                 accuracy = accuracy_score(true_emotions, predicted_emotions)
-                accuracy_label.config(text=f"Accuracy: {accuracy:.2f}")
+                accuracy_label.config(text=f"Accuracy: {accuracy*100:.2f}%")
+
+                # Save the misclassified rows to emotions.csv
+                misclassified_data = [(text, true_emotion) for (text, true_emotion, predicted_emotion) in data_with_predictions if true_emotion != predicted_emotion]
+                with open('emotions.csv', 'a', newline='') as file:
+                    writer = csv.writer(file)
+                    writer.writerows(misclassified_data)
+
             else:
                 result_label.config(text="Error: 'Text' or 'True Emotion' columns not found in the CSV file")
     else:
         result_label.config(text="Error: No file selected")
+
 
 
 def update_results():
