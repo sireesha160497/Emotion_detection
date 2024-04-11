@@ -36,7 +36,7 @@ def calculate_performance():
     result_label.config(text="Performance Metrics:\n" + report)
 
 def save_to_csv():
-    with open('emotions.csv', 'w', newline='') as file:
+    with open('emotions.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         for emotion in emotions:
             writer.writerow(emotion[:3])  # Write only the first three values of each tuple
