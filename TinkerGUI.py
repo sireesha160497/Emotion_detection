@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import filedialog
 import requests
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, accuracy_score
 import time
 import csv
 from EmotionDetectionModel import EmotionDetectionModel
@@ -52,6 +52,11 @@ def upload_csv():
                     writer.writerows(data_with_predictions)  # Write data with predicted emotions
 
                 result_label.config(text="Predicted emotions added to the CSV file")
+                # Calculate accuracy
+                true_emotions = [true_emotion for _, true_emotion, _ in data_with_predictions]
+                predicted_emotions = [predicted_emotion for _, _, predicted_emotion in data_with_predictions]
+                accuracy = accuracy_score(true_emotions, predicted_emotions)
+                accuracy_label.config(text=f"Accuracy: {accuracy:.2f}")
             else:
                 result_label.config(text="Error: 'Text' or 'True Emotion' columns not found in the CSV file")
     else:
@@ -93,9 +98,11 @@ def train_model():
 
 
 def create_gui():
-    global root, text_entry, true_emotion_var, emotions, result_label
+    global root, text_entry, true_emotion_var, emotions, result_label, accuracy_label  # Add accuracy_label to global variables
+
     root = tk.Tk()
     root.title("Emotion Detection GUI")
+
     label = tk.Label(root, text="Enter Text:")
     label.pack()
 
@@ -114,9 +121,6 @@ def create_gui():
     predict_button = tk.Button(root, text="Predict Emotion", command=predict_emotion)
     predict_button.pack()
 
-    upload_button = tk.Button(root, text="Upload Test CSV", command=upload_csv)
-    upload_button.pack()
-
     result_label = tk.Label(root, text="")
     result_label.pack()
 
@@ -125,6 +129,12 @@ def create_gui():
 
     save_button = tk.Button(root, text="Save Inputs to CSV", command=save_to_csv)
     save_button.pack()
+
+    upload_button = tk.Button(root, text="Upload Test CSV", command=upload_csv)
+    upload_button.pack()
+
+    accuracy_label = tk.Label(root, text="")
+    accuracy_label.pack()  # Add accuracy_label to the GUI layout
 
     emotions = []  # List to store user inputs, true emotions, predicted emotions, and response times
     root.mainloop()
