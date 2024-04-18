@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from EmotionDetectionModel import EmotionDetectionModel
 
 app = Flask(__name__)
-model = EmotionDetectionModel('emotions.csv')
+model = EmotionDetectionModel('train.csv')
 model.train_model()
 
 

@@ -58,9 +58,9 @@ def upload_csv():
                 accuracy = accuracy_score(true_emotions, predicted_emotions)
                 accuracy_label.config(text=f"Accuracy: {accuracy*100:.2f}%")
 
-                # Save the misclassified rows to emotions.csv
+                # Save the misclassified rows to train.csv
                 misclassified_data = [(text, true_emotion) for (text, true_emotion, predicted_emotion) in data_with_predictions if true_emotion != predicted_emotion]
-                with open('emotions.csv', 'a', newline='') as file:
+                with open('train.csv', 'a', newline='') as file:
                     writer = csv.writer(file)
                     writer.writerows(misclassified_data)
 
@@ -87,11 +87,11 @@ def calculate_performance():
 
 
 def save_to_csv():
-    with open('emotions.csv', 'a', newline='') as file:
+    with open('train.csv', 'a', newline='') as file:
         writer = csv.writer(file)
         for emotion in emotions:
             writer.writerow(emotion[:2])  # Write only the first three values of each tuple
-    result_label.config(text="Saved inputs to emotions.csv")
+    result_label.config(text="Saved inputs to train.csv")
     train_model()
     # Reload the GUI after training
     root.destroy()  # Destroy the current GUI window
@@ -100,7 +100,7 @@ def save_to_csv():
 
 def train_model():
     global model
-    model = EmotionDetectionModel('emotions.csv')
+    model = EmotionDetectionModel('train.csv')
     model.train_model()
     result_label.config(text="Training model with updated dataset...")
 
